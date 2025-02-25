@@ -6,7 +6,9 @@ const cors = require("cors");
 dotenv.config();
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes"); // Fixed typo
+const userRoutes = require("./routes/userRoutes"); 
+const lessonRoutes = require("./routes/lessonRoutes");
+const questionRoutes = require("./routes/questionRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,8 +30,9 @@ mongoose.connect(process.env.MONGO_URL)
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes); // Fixed typo
-
+app.use("/api/user", userRoutes); 
+app.use("/api/lessons", lessonRoutes);
+app.use("/api/questions", questionRoutes);
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.error("❌ Server Error:", err);

@@ -1,10 +1,16 @@
-const Lesson = require("../models/Lesson");
+const Lesson = require("../models/lessonModel");
 
 // 📌 Create a new lesson
 exports.createLesson = async (req, res) => {
   try {
+    console.log("User in Request:", req.user); // 🔍 Debugging
+
     const { title, content } = req.body;
-    const userId = req.user.id; // Assuming user is authenticated
+    const userId = req.user?.id; // Ensure req.user is defined
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
+    }
 
     if (!title || !content) {
       return res.status(400).json({ error: "Title and content are required." });
@@ -17,6 +23,7 @@ exports.createLesson = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // 📌 Get all lessons for the logged-in user
 exports.getLessons = async (req, res) => {
