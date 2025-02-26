@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: "https://learnify-rho-woad.vercel.app/" || "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
