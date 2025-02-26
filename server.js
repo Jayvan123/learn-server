@@ -16,11 +16,19 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://learnify-rho-woad.vercel.app/" || "https://learnify-rho-woad.vercel.app/",
+    origin: (origin, callback) => {
+      const allowedOrigins = ["https://learnify-rho-woad.vercel.app"];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
+
 
 // MongoDB Connection with Error Handling
 mongoose.connect(process.env.MONGO_URL)
