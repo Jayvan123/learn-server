@@ -1,6 +1,6 @@
 const Lesson = require("../models/lessonModel");
 
-// 📌 Create a new lesson
+// Create a new lesson
 exports.createLesson = async (req, res) => {
   try {
     console.log("User in Request:", req.user); // 🔍 Debugging
@@ -25,7 +25,7 @@ exports.createLesson = async (req, res) => {
 };
 
 
-// 📌 Get all lessons for the logged-in user
+// Get all lessons for the logged-in user
 exports.getLessons = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -37,7 +37,7 @@ exports.getLessons = async (req, res) => {
   }
 };
 
-// 📌 Get a single lesson by ID
+// Get a single lesson by ID
 exports.getLessonById = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
@@ -50,7 +50,7 @@ exports.getLessonById = async (req, res) => {
   }
 };
 
-// 📌 Update a lesson
+// Update a lesson
 exports.updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
@@ -70,7 +70,7 @@ exports.updateLesson = async (req, res) => {
   }
 };
 
-// 📌 Delete a lesson
+// Delete a lesson
 exports.deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);

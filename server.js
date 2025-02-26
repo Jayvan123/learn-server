@@ -6,7 +6,6 @@ const cors = require("cors");
 dotenv.config();
 
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes"); 
 const lessonRoutes = require("./routes/lessonRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 
@@ -30,7 +29,6 @@ mongoose.connect(process.env.MONGO_URL)
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/user", userRoutes); 
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/questions", questionRoutes);
 // Global Error Handler

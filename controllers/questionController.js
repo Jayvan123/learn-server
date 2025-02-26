@@ -4,17 +4,24 @@ const Lesson = require("../models/lessonModel");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// 📌 Generate Questions using Gemini AI
+// Generate Questions using Gemini AI
 exports.generateQuestions = async (req, res) => {
   try {
     const { lessonId } = req.params;
-    console.log(lessonId)
+   
     // Find the lesson
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
-    // 🔹 Call Gemini AI to generate questions
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-pro-exp-02-05" });
+
+    const generationConfig = {
+      temperature: 0.2,
+      topP: 0.95,
+      topK: 40,
+      maxOutputTokens: 8192,
+      responseMimeType: "application/json",
+    };
 
     const prompt = `
     I have the following lesson notes:
@@ -23,10 +30,10 @@ exports.generateQuestions = async (req, res) => {
     Generate exactly 5 multiple-choice questions based on this lesson.
     Each question must have exactly 4 answer choices.
     Indicate the correct answer.
-  
-    🔹 **VERY IMPORTANT:** Return ONLY pure JSON without any explanations or extra text.
-    🔹 **Format it EXACTLY like this:**
-    
+
+    **VERY IMPORTANT:** Return ONLY valid JSON without any explanations, extra text, or formatting like markdown, backticks, or code blocks.
+
+    **Format it EXACTLY like this:**
     {
       "questions": [
         {
@@ -36,15 +43,20 @@ exports.generateQuestions = async (req, res) => {
         }
       ]
     }
-    
-    Do NOT include explanations or any other text, ONLY return valid JSON.
-  `;
-  
 
-    const result = await model.generateContent(prompt);
+    Do NOT include explanations or any other text, ONLY return valid JSON.
+    `;
+
+    // Generate questions with AI
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig,
+    });
+
     const responseText = await result.response.text();
-    console.log(result)
-    // Parse the AI-generated JSON
+    console.log(responseText);
+
+    // Parse AI-generated JSON
     const parsedData = JSON.parse(responseText);
     const generatedQuestions = parsedData.questions;
 
@@ -64,6 +76,7 @@ exports.generateQuestions = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 exports.getQuestionsByLesson = async (req, res) => {
   try {

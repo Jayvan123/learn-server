@@ -4,10 +4,10 @@ const questionSchema = new mongoose.Schema(
   {
     lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson", required: true },
     questionText: { type: String, required: true },
-    choices: { type: [String], required: true }, // Array of 4 choices
-    correctAnswer: { type: String, required: true }, // The correct choice
+    choices: { type: [String], required: true }, 
+    correctAnswer: { type: String, required: true }, 
   },
-  { timestamps: true } // Adds createdAt and updatedAt fields automatically
+  { timestamps: true } 
 );
 
 const Question = mongoose.model("Question", questionSchema);
