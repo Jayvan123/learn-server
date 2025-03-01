@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["https://learnify-rho-woad.vercel.app"];
+      const allowedOrigins = ["http://localhost:3000"];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, origin);
       } else {
@@ -39,11 +39,12 @@ mongoose.connect(process.env.MONGO_URL)
 app.use("/api/auth", authRoutes);
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/questions", questionRoutes);
-// Global Error Handler
+
+
 app.use((err, req, res, next) => {
-  console.error("❌ Server Error:", err);
+  console.error("Server Error:", err);
   res.status(500).json({ error: "Internal Server Error" });
 });
 
 // Start Server
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

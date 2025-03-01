@@ -3,10 +3,10 @@ const Lesson = require("../models/lessonModel");
 // Create a new lesson
 exports.createLesson = async (req, res) => {
   try {
-    console.log("User in Request:", req.user); // 🔍 Debugging
+    console.log("User in Request:", req.user); 
 
     const { title, content } = req.body;
-    const userId = req.user?.id; // Ensure req.user is defined
+    const userId = req.user?.id; 
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized. No user attached to request." });

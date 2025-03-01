@@ -60,7 +60,7 @@ exports.generateQuestions = async (req, res) => {
     const parsedData = JSON.parse(responseText);
     const generatedQuestions = parsedData.questions;
 
-    // Store questions in MongoDB
+    // Store questions in DB
     const savedQuestions = await Question.insertMany(
       generatedQuestions.map(q => ({
         lessonId,
@@ -72,7 +72,7 @@ exports.generateQuestions = async (req, res) => {
 
     res.status(201).json(savedQuestions);
   } catch (error) {
-    console.error("❌ Error generating questions:", error);
+    console.error("Error generating questions:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
