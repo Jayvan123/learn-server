@@ -1,12 +1,13 @@
 const Lesson = require("../models/lessonModel");
+const Category =require("../models/categoryModel")
 
 // Create a new lesson
 exports.createLesson = async (req, res) => {
   try {
-    console.log("User in Request:", req.user); 
+    console.log("User in Request:", req.user);
 
-    const { title, content } = req.body;
-    const userId = req.user?.id; 
+    const { title, content, categoryName } = req.body;
+    const userId = req.user?.id;
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized. No user attached to request." });
@@ -16,7 +17,24 @@ exports.createLesson = async (req, res) => {
       return res.status(400).json({ error: "Title and content are required." });
     }
 
-    const newLesson = await Lesson.create({ userId, title, content });
+    // Use provided category name or fallback to "default"
+    const categoryToFind = categoryName?.trim() || "default";
+
+    // Check if the category exists, if not, create it
+    let category = await Category.findOne({ name: categoryToFind, userId });
+
+    if (!category) {
+      category = await Category.create({ name: categoryToFind, userId });
+    }
+
+    // Create the lesson with the found or newly created category
+    const newLesson = await Lesson.create({
+      userId,
+      title,
+      content,
+      categoryId: category._id,
+    });
+
     res.status(201).json(newLesson);
   } catch (error) {
     console.error("Error creating lesson:", error);
