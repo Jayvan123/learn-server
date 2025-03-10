@@ -1,6 +1,6 @@
 const Category = require("../models/categoryModel");
 
-// ✅ Create a Category
+// Create a Category
 exports.createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -16,7 +16,6 @@ exports.createCategory = async (req, res) => {
 
     const trimmedName = name.trim();
 
-    // Check if the category already exists for the user
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
@@ -33,7 +32,7 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// ✅ Get All Categories (for the logged-in user)
+// Get All Categories (for the logged-in user)
 exports.getCategories = async (req, res) => {
   try {
     const userId = req.user?.id;
@@ -51,7 +50,7 @@ exports.getCategories = async (req, res) => {
   }
 };
 
-// ✅ Update a Category (rename)
+// Update a Category (rename)
 exports.updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -68,7 +67,6 @@ exports.updateCategory = async (req, res) => {
 
     const trimmedName = name.trim();
 
-    // Check if a category with the new name already exists for the user
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
@@ -93,7 +91,7 @@ exports.updateCategory = async (req, res) => {
   }
 };
 
-// ✅ Delete a Category
+// Delete a Category
 exports.deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
