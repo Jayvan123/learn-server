@@ -3,7 +3,7 @@ name: Track Render Deployment
 on:
   push:
     branches:
-      - main  # Change if using a different branch
+      - main 
 
 jobs:
   deploy:
@@ -25,3 +25,19 @@ jobs:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
           curl -X POST "$RENDER_DEPLOY_HOOK"
+
+      - name: Update Deployment Count
+        run: |
+          DEPLOY_COUNT=$(($(cat deployment-info.md 2>/dev/null | grep -o '[0-9]*' | head -n1)+1))
+          echo "## Deployment Details" > deployment-info.md
+          echo "- **Total Deployments:** $DEPLOY_COUNT" >> deployment-info.md
+          echo "- **Last Deployed:** $(date)" >> deployment-info.md
+          echo "- **API URL:** ${{ secrets.RENDER_DEPLOY_URL }}" >> deployment-info.md
+
+      - name: Commit Deployment Info
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions@github.com"
+          git add deployment-info.md
+          git commit -m "Updated deployment info [skip ci]" || echo "No changes to commit"
+          git push
