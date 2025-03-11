@@ -3,7 +3,7 @@ name: Track Render Deployment
 on:
   push:
     branches:
-      - main  
+      - main  # Change if using a different branch
 
 jobs:
   deploy:
@@ -12,6 +12,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Debug Secret (DO NOT DO THIS IN PUBLIC REPOS)
+        run: |
+          echo "Checking if URL is set..."
+          echo "Length of URL: ${#RENDER_DEPLOY_HOOK}"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
 
       - name: Trigger Render Deployment
         env:
