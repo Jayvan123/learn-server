@@ -3,7 +3,7 @@ name: Track Render Deployment
 on:
   push:
     branches:
-      - main 
+      - main  # Change if using a different branch
 
 jobs:
   deploy:
@@ -35,9 +35,12 @@ jobs:
           echo "- **API URL:** ${{ secrets.RENDER_DEPLOY_URL }}" >> deployment-info.md
 
       - name: Commit Deployment Info
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions@github.com"
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
           git add deployment-info.md
           git commit -m "Updated deployment info [skip ci]" || echo "No changes to commit"
           git push
