@@ -68,12 +68,16 @@ exports.getLessonById = async (req, res) => {
   }
 };
 
-// Update a lesson
 exports.updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const lesson = await Lesson.findById(req.params.id);
 
+    // Validate input
+    if (!title && !content) {
+      return res.status(400).json({ error: "At least one field is required" });
+    }
+
+    const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
     // Update fields if provided
@@ -92,7 +96,6 @@ exports.updateLesson = async (req, res) => {
 exports.deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
-
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
     await lesson.deleteOne();
