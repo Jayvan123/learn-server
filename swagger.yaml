@@ -11,6 +11,129 @@ servers:
     description: Production Server
 
 components:
+  schemas:
+    User:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - username
+        - email
+        - password
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "65d2e29f8f47d3f5b98e4a30"
+        firstName:
+          type: string
+          example: "John"
+        lastName:
+          type: string
+          example: "Doe"
+        username:
+          type: string
+          example: "johndoe123"
+        email:
+          type: string
+          format: email
+          example: "john.doe@example.com"
+        password:
+          type: string
+          format: password
+          example: "yourpassword123"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Category:
+      type: object
+      required:
+        - name
+        - userId
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "65d2e2bf9a8c4d7e6a8b4c21"
+        name:
+          type: string
+          example: "Programming"
+        userId:
+          type: string
+          format: uuid
+          example: "65d2e29f8f47d3f5b98e4a30"
+
+    Lesson:
+      type: object
+      required:
+        - userId
+        - title
+        - content
+        - categoryId
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "65d2e3451a9b5c4e3f8c2a9d"
+        userId:
+          type: string
+          format: uuid
+          example: "65d2e29f8f47d3f5b98e4a30"
+        title:
+          type: string
+          example: "Introduction to JavaScript"
+        content:
+          type: string
+          example: "JavaScript is a programming language used for web development."
+        categoryId:
+          type: string
+          format: uuid
+          example: "65d2e2bf9a8c4d7e6a8b4c21"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Question:
+      type: object
+      required:
+        - lessonId
+        - questionText
+        - choices
+        - correctAnswer
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "65d2e789f3b4d9e2c8a7b6d1"
+        lessonId:
+          type: string
+          format: uuid
+          example: "65d2e3451a9b5c4e3f8c2a9d"
+        questionText:
+          type: string
+          example: "What is the correct syntax for declaring a variable in JavaScript?"
+        choices:
+          type: array
+          items:
+            type: string
+          example: ["var x = 10;", "let x = 10;", "const x = 10;", "All of the above"]
+        correctAnswer:
+          type: string
+          example: "All of the above"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
   securitySchemes:
     BearerAuth:
       type: http
