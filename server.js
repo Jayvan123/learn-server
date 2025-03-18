@@ -22,7 +22,7 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://thinkbox.vercel.app"],
+    origin: ["http://localhost:3000", "https://thinkbox.vercel.app", "https://learn-server-sroc.onrender.com"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
