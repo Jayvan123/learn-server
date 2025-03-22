@@ -5,7 +5,7 @@ const Lesson = require("../models/lessonModel");
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Generate Questions using Gemini AI
-exports.generateQuestions = async (req, res) => {
+const generateQuestions = async (req, res) => {
   try {
     const { lessonId } = req.params;
    
@@ -78,7 +78,7 @@ exports.generateQuestions = async (req, res) => {
 };
 
 
-exports.getQuestionsByLesson = async (req, res) => {
+const getQuestionsByLesson = async (req, res) => {
   try {
     const { lessonId } = req.params;
 
@@ -97,3 +97,5 @@ exports.getQuestionsByLesson = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch questions" });
   }
 };
+
+module.exports = { generateQuestions, getQuestionsByLesson };

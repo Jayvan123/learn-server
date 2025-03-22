@@ -2,7 +2,7 @@ const Lesson = require("../models/lessonModel");
 const Category =require("../models/categoryModel")
 
 // Create a new lesson
-exports.createLesson = async (req, res) => {
+const createLesson = async (req, res) => {
   try {
     console.log("User in Request:", req.user);
 
@@ -44,7 +44,7 @@ exports.createLesson = async (req, res) => {
 
 
 // Get all lessons for the logged-in user
-exports.getLessons = async (req, res) => {
+const getLessons = async (req, res) => {
   try {
     const userId = req.user.id;
     const lessons = await Lesson.find({ userId }).sort({ createdAt: -1 });
@@ -56,7 +56,7 @@ exports.getLessons = async (req, res) => {
 };
 
 // Get a single lesson by ID
-exports.getLessonById = async (req, res) => {
+const getLessonById = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
@@ -68,7 +68,7 @@ exports.getLessonById = async (req, res) => {
   }
 };
 
-exports.updateLesson = async (req, res) => {
+const updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
 
@@ -93,7 +93,7 @@ exports.updateLesson = async (req, res) => {
 };
 
 // Delete a lesson
-exports.deleteLesson = async (req, res) => {
+const deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
@@ -105,3 +105,5 @@ exports.deleteLesson = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+module.exports = { createLesson, getLessons, getLessonById, updateLesson, deleteLesson };

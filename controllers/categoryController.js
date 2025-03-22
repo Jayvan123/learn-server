@@ -1,7 +1,7 @@
 const Category = require("../models/categoryModel");
 
 // Create a Category
-exports.createCategory = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const userId = req.user?.id;
@@ -33,7 +33,7 @@ exports.createCategory = async (req, res) => {
 };
 
 // Get All Categories (for the logged-in user)
-exports.getCategories = async (req, res) => {
+const getCategories = async (req, res) => {
   try {
     const userId = req.user?.id;
 
@@ -51,7 +51,7 @@ exports.getCategories = async (req, res) => {
 };
 
 // Update a Category (rename)
-exports.updateCategory = async (req, res) => {
+const updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
@@ -92,7 +92,7 @@ exports.updateCategory = async (req, res) => {
 };
 
 // Delete a Category
-exports.deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
@@ -113,3 +113,6 @@ exports.deleteCategory = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+
+module.exports = {createCategory, getCategories, updateCategory, deleteCategory};
