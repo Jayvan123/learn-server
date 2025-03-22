@@ -22,7 +22,6 @@ const createCategory = async (req, res) => {
       return res.status(400).json({ error: "Category already exists." });
     }
 
-    // Create the new category
     const newCategory = await Category.create({ name: trimmedName, userId });
 
     res.status(201).json(newCategory);

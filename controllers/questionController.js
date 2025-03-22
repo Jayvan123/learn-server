@@ -82,15 +82,15 @@ const getQuestionsByLesson = async (req, res) => {
   try {
     const { lessonId } = req.params;
 
-    // Check if lessonId is provided
+
     if (!lessonId) {
       return res.status(400).json({ error: "Lesson ID is required" });
     }
 
-    // Fetch questions from database
+ 
     const questions = await Question.find({ lessonId });
 
-    // Return questions
+
     res.status(200).json({ questions });
   } catch (error) {
     console.error("Error fetching questions:", error);

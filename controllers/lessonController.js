@@ -17,17 +17,14 @@ const createLesson = async (req, res) => {
       return res.status(400).json({ error: "Title and content are required." });
     }
 
-    // Use provided category name or fallback to "default"
     const categoryToFind = categoryName?.trim() || "default";
 
-    // Check if the category exists, if not, create it
     let category = await Category.findOne({ name: categoryToFind, userId });
 
     if (!category) {
       category = await Category.create({ name: categoryToFind, userId });
     }
 
-    // Create the lesson with the found or newly created category
     const newLesson = await Lesson.create({
       userId,
       title,
@@ -80,7 +77,7 @@ const updateLesson = async (req, res) => {
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
-    // Update fields if provided
+
     if (title) lesson.title = title;
     if (content) lesson.content = content;
 
