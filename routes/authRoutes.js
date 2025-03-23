@@ -4,7 +4,14 @@ const { validateRegister, validateLogin } = require('../middleware/validators/au
 
 const router = express.Router();
 
-router.post('/register', validateRegister, register);
-router.post('/login', validateLogin, login);
+router.post('/register', 
+    validateRegister, 
+    register
+);
+
+router.post('/login', 
+    validateLogin, 
+    login
+);
 
 module.exports = router;

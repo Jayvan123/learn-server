@@ -5,7 +5,9 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
+
 dotenv.config();
+const swaggerDocument = YAML.load("./swagger.yaml");
 
 const authRoutes = require("./routes/authRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
@@ -16,9 +18,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 
-const swaggerDocument = YAML.load("./swagger.yaml");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use(express.json());
 app.use(
@@ -28,8 +29,6 @@ app.use(
     credentials: true,
   })
 );
-
-
 
 
 mongoose.connect(process.env.MONGO_URL)

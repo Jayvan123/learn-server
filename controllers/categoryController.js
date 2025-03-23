@@ -6,14 +6,6 @@ const createCategory = async (req, res) => {
     const { name } = req.body;
     const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Category name is required." });
-    }
-
     const trimmedName = name.trim();
 
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
@@ -31,14 +23,10 @@ const createCategory = async (req, res) => {
   }
 };
 
-// Get All Categories (for the logged-in user)
+// Get All Categories 
 const getCategories = async (req, res) => {
   try {
     const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
 
     const categories = await Category.find({ userId });
 
@@ -49,16 +37,13 @@ const getCategories = async (req, res) => {
   }
 };
 
-// Update a Category (rename)
+// Update a Category 
 const updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
     const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
 
     if (!name || name.trim() === "") {
       return res.status(400).json({ error: "Category name is required." });
@@ -72,7 +57,7 @@ const updateCategory = async (req, res) => {
       return res.status(400).json({ error: "Category with this name already exists." });
     }
 
-    // Update the category
+  
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: id, userId },
       { name: trimmedName },
@@ -95,10 +80,6 @@ const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
 
     const deletedCategory = await Category.findOneAndDelete({ _id: id, userId });
 

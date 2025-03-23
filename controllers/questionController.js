@@ -4,12 +4,12 @@ const Lesson = require("../models/lessonModel");
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Generate Questions using Gemini AI
+// Generate Questions
 const generateQuestions = async (req, res) => {
   try {
     const { lessonId } = req.params;
    
-    // Find the lesson
+   
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
@@ -47,7 +47,7 @@ const generateQuestions = async (req, res) => {
     Do NOT include explanations or any other text, ONLY return valid JSON.
     `;
 
-    // Generate questions with AI
+
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig,
@@ -56,11 +56,11 @@ const generateQuestions = async (req, res) => {
     const responseText = await result.response.text();
     console.log(responseText);
 
-    // Parse AI-generated JSON
+ 
     const parsedData = JSON.parse(responseText);
     const generatedQuestions = parsedData.questions;
 
-    // Store questions in DB
+  
     const savedQuestions = await Question.insertMany(
       generatedQuestions.map(q => ({
         lessonId,
@@ -77,7 +77,7 @@ const generateQuestions = async (req, res) => {
   }
 };
 
-
+// Get Questions by Lesson ID
 const getQuestionsByLesson = async (req, res) => {
   try {
     const { lessonId } = req.params;

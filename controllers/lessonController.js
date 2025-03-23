@@ -4,18 +4,8 @@ const Category =require("../models/categoryModel")
 // Create a new lesson
 const createLesson = async (req, res) => {
   try {
-    console.log("User in Request:", req.user);
-
     const { title, content, categoryName } = req.body;
     const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title and content are required." });
-    }
 
     const categoryToFind = categoryName?.trim() || "default";
 
@@ -68,11 +58,6 @@ const getLessonById = async (req, res) => {
 const updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
-
-    // Validate input
-    if (!title && !content) {
-      return res.status(400).json({ error: "At least one field is required" });
-    }
 
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
