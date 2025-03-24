@@ -7,7 +7,6 @@ const createCategory = async (req, res) => {
     const userId = req.user?.id;
 
     const trimmedName = name.trim();
-
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
@@ -15,7 +14,6 @@ const createCategory = async (req, res) => {
     }
 
     const newCategory = await Category.create({ name: trimmedName, userId });
-
     res.status(201).json(newCategory);
   } catch (error) {
     console.error("Error creating category:", error);
@@ -27,9 +25,7 @@ const createCategory = async (req, res) => {
 const getCategories = async (req, res) => {
   try {
     const userId = req.user?.id;
-
     const categories = await Category.find({ userId });
-
     res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -44,20 +40,13 @@ const updateCategory = async (req, res) => {
     const { id } = req.params;
     const userId = req.user?.id;
 
-
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Category name is required." });
-    }
-
     const trimmedName = name.trim();
-
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
       return res.status(400).json({ error: "Category with this name already exists." });
     }
 
-  
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: id, userId },
       { name: trimmedName },
@@ -94,5 +83,4 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-
-module.exports = {createCategory, getCategories, updateCategory, deleteCategory};
+module.exports = { createCategory, getCategories, updateCategory, deleteCategory };
