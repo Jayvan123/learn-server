@@ -6,13 +6,14 @@ const cors = require("cors");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
 
-dotenv.config();
-const swaggerDocument = YAML.load("./swagger.yaml");
-
 const authRoutes = require("./routes/authRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+
+dotenv.config();
+const swaggerDocument = YAML.load("./swagger.yaml");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
