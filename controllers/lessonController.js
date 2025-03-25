@@ -2,32 +2,19 @@ const Lesson = require("../models/lessonModel");
 const Category =require("../models/categoryModel")
 
 // Create a new lesson
-exports.createLesson = async (req, res) => {
+const createLesson = async (req, res) => {
   try {
-    console.log("User in Request:", req.user);
-
     const { title, content, categoryName } = req.body;
     const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
-    if (!title || !content) {
-      return res.status(400).json({ error: "Title and content are required." });
-    }
-
-    // Use provided category name or fallback to "default"
     const categoryToFind = categoryName?.trim() || "default";
 
-    // Check if the category exists, if not, create it
     let category = await Category.findOne({ name: categoryToFind, userId });
 
     if (!category) {
       category = await Category.create({ name: categoryToFind, userId });
     }
 
-    // Create the lesson with the found or newly created category
     const newLesson = await Lesson.create({
       userId,
       title,
@@ -44,7 +31,7 @@ exports.createLesson = async (req, res) => {
 
 
 // Get all lessons for the logged-in user
-exports.getLessons = async (req, res) => {
+const getLessons = async (req, res) => {
   try {
     const userId = req.user.id;
     const lessons = await Lesson.find({ userId }).sort({ createdAt: -1 });
@@ -56,7 +43,7 @@ exports.getLessons = async (req, res) => {
 };
 
 // Get a single lesson by ID
-exports.getLessonById = async (req, res) => {
+const getLessonById = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
@@ -68,19 +55,14 @@ exports.getLessonById = async (req, res) => {
   }
 };
 
-exports.updateLesson = async (req, res) => {
+const updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
-
-    // Validate input
-    if (!title && !content) {
-      return res.status(400).json({ error: "At least one field is required" });
-    }
 
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
-    // Update fields if provided
+
     if (title) lesson.title = title;
     if (content) lesson.content = content;
 
@@ -93,7 +75,7 @@ exports.updateLesson = async (req, res) => {
 };
 
 // Delete a lesson
-exports.deleteLesson = async (req, res) => {
+const deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
@@ -105,3 +87,5 @@ exports.deleteLesson = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+module.exports = { createLesson, getLessons, getLessonById, updateLesson, deleteLesson };

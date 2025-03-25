@@ -1,30 +1,19 @@
 const Category = require("../models/categoryModel");
 
 // Create a Category
-exports.createCategory = async (req, res) => {
+const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Category name is required." });
-    }
-
     const trimmedName = name.trim();
-
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
       return res.status(400).json({ error: "Category already exists." });
     }
 
-    // Create the new category
     const newCategory = await Category.create({ name: trimmedName, userId });
-
     res.status(201).json(newCategory);
   } catch (error) {
     console.error("Error creating category:", error);
@@ -32,17 +21,11 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-// Get All Categories (for the logged-in user)
-exports.getCategories = async (req, res) => {
+// Get All Categories 
+const getCategories = async (req, res) => {
   try {
     const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
     const categories = await Category.find({ userId });
-
     res.status(200).json(categories);
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -50,30 +33,20 @@ exports.getCategories = async (req, res) => {
   }
 };
 
-// Update a Category (rename)
-exports.updateCategory = async (req, res) => {
+// Update a Category 
+const updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
     const userId = req.user?.id;
 
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
-
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Category name is required." });
-    }
-
     const trimmedName = name.trim();
-
     const existingCategory = await Category.findOne({ name: trimmedName, userId });
 
     if (existingCategory) {
       return res.status(400).json({ error: "Category with this name already exists." });
     }
 
-    // Update the category
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: id, userId },
       { name: trimmedName },
@@ -92,14 +65,10 @@ exports.updateCategory = async (req, res) => {
 };
 
 // Delete a Category
-exports.deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.user?.id;
-
-    if (!userId) {
-      return res.status(401).json({ error: "Unauthorized. No user attached to request." });
-    }
 
     const deletedCategory = await Category.findOneAndDelete({ _id: id, userId });
 
@@ -113,3 +82,5 @@ exports.deleteCategory = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+module.exports = { createCategory, getCategories, updateCategory, deleteCategory };

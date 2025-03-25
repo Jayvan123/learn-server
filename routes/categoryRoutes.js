@@ -1,12 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const categoryController = require("../controllers/categoryController");
-const authMiddleware = require("../middleware/authMiddleware"); // Ensure the user is authenticated
+const { createCategory, getCategories, updateCategory, deleteCategory } = require("../controllers/categoryController");
+const authMiddleware = require("../middleware/authMiddleware");
+const { validateCategory, validateCategoryId } = require("../middleware/validators/categoryValidator");
 
-// Protect all category routes with authentication middleware
-router.post("/", authMiddleware, categoryController.createCategory);
-router.get("/", authMiddleware, categoryController.getCategories);
-router.put("/:id", authMiddleware, categoryController.updateCategory);
-router.delete("/:id", authMiddleware, categoryController.deleteCategory);
+router.post("/", 
+    authMiddleware, 
+    validateCategory, 
+    createCategory
+);
+
+router.get("/", 
+    authMiddleware, 
+    getCategories
+);
+
+router.put("/:id", 
+    authMiddleware, 
+    validateCategoryId, 
+    validateCategory, 
+    updateCategory
+);
+
+router.delete("/:id", 
+    authMiddleware, 
+    validateCategoryId, 
+    deleteCategory
+);
 
 module.exports = router;
