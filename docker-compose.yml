@@ -1,0 +1,14 @@
+version: '3'
+services:
+  integ_api:
+    container_name: test_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - MONGO_URL=mongodb+srv://katsuragik919:zQYFuhrt3XZFhKRD@wordgame.wzba5.mongodb.net/?retryWrites=true&w=majority&appName=wordgame
+      - JWT_SECRET=123456789
