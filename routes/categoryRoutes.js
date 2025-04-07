@@ -19,9 +19,7 @@ router.post(
   authMiddleware,
   body("name")
     .exists().withMessage("Category name is required.")
-    .bail()
     .isString().withMessage("Category name must be a string.")
-    .bail()
     .trim()
     .isLength({ min: 2 }).withMessage("Category name must be at least 2 characters long."),
   handleValidationErrors,
@@ -41,9 +39,7 @@ router.put(
     .isMongoId().withMessage("Invalid category ID."),
   body("name")
     .exists().withMessage("Category name is required.")
-    .bail()
     .isString().withMessage("Category name must be a string.")
-    .bail()
     .trim(),
   handleValidationErrors,
   updateCategory
