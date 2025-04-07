@@ -258,13 +258,13 @@ paths:
             schema:
               type: object
               required:
-                - email
+                - 
                 - password
               properties:
-                email:
+                username:
                   type: string
-                  format: email
-                  example: "johndoe@example.com"
+                  format: username
+                  example: "johndoe123"
                 password:
                   type: string
                   format: password
