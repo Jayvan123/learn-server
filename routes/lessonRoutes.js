@@ -11,10 +11,6 @@ const {
   deleteLesson,
 } = require("../controllers/lessonController");
 
-
-
-// Routes
-
 // Create Lesson
 router.post(
   "/",
