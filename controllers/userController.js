@@ -78,7 +78,6 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// ✅ Final export
 module.exports = {
   uploadProfilePic,
   createUser,
