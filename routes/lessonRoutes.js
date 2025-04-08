@@ -1,7 +1,7 @@
 const express = require("express");
 const { body, param, validationResult } = require("express-validator");
 const router = express.Router();
-const handleValidationErrors = require('../utils/validationErrorHandling');
+const validationError = require('../utils/validationError');
 const authMiddleware = require("../middleware/authMiddleware");
 const {
   createLesson,
@@ -29,7 +29,7 @@ router.post(
     .optional()
     .isString().withMessage("Category name must be a string.")
     .trim(),
-  handleValidationErrors,
+    validationError,
   createLesson
 );
 
@@ -46,7 +46,7 @@ router.get(
   authMiddleware,
   param("id")
     .isMongoId().withMessage("Invalid lesson ID."),
-  handleValidationErrors,
+    validationError,
   getLessonById
 );
 
@@ -66,7 +66,7 @@ router.put(
     .isString().withMessage("Content must be a string.")
     .trim()
     .notEmpty().withMessage("Content cannot be empty."),
-  handleValidationErrors,
+    validationError,
   updateLesson
 );
 
@@ -76,7 +76,7 @@ router.delete(
   authMiddleware,
   param("id")
     .isMongoId().withMessage("Invalid lesson ID."),
-  handleValidationErrors,
+    validationError,
   deleteLesson
 );
 

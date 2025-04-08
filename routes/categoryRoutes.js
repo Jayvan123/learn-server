@@ -1,7 +1,7 @@
 const express = require("express");
 const { body, param, validationResult } = require("express-validator");
 const router = express.Router();
-const handleValidationErrors = require('../utils/validationErrorHandling');
+const validationError = require('../utils/validationError');
 const authMiddleware = require("../middleware/authMiddleware");
 const {
   createCategory,
@@ -22,7 +22,7 @@ router.post(
     .isString().withMessage("Category name must be a string.")
     .trim()
     .isLength({ min: 2 }).withMessage("Category name must be at least 2 characters long."),
-  handleValidationErrors,
+    validationError,
   createCategory
 );
 
@@ -41,7 +41,7 @@ router.put(
     .exists().withMessage("Category name is required.")
     .isString().withMessage("Category name must be a string.")
     .trim(),
-  handleValidationErrors,
+    validationError,
   updateCategory
 );
 
@@ -50,7 +50,7 @@ router.delete(
   authMiddleware,
   param("id")
     .isMongoId().withMessage("Invalid category ID."),
-  handleValidationErrors,
+    validationError,
   deleteCategory
 );
 

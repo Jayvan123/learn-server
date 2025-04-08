@@ -31,15 +31,6 @@ const uploadProfilePic = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
-  try {
-    const newUser = new User(req.body);
-    const savedUser = await newUser.save();
-    res.status(201).json({ success: true, data: savedUser });
-  } catch (err) {
-    res.status(400).json({ success: false, message: err.message });
-  }
-};
 
 const getAllUsers = async (req, res) => {
   try {
@@ -80,7 +71,6 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   uploadProfilePic,
-  createUser,
   getAllUsers,
   getUserById,
   updateUser,

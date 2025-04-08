@@ -2,11 +2,11 @@ const express = require('express');
 const { body } = require('express-validator');
 const { register, login } = require('../controllers/authController');
 const User = require('../models/userModel');
-const handleValidationErrors = require('../utils/validationErrorHandling');
+const validationError = require('../utils/validationError');
 
 const router = express.Router();
 
-router.post('/register', [
+router.post('/register', 
   body('firstName').isString().notEmpty().withMessage('First name is required'),
   body('lastName').isString().notEmpty().withMessage('Last name is required'),
   body('username')
@@ -24,12 +24,12 @@ router.post('/register', [
   body('password')
     .isString()
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
-], handleValidationErrors, register);
+, validationError, register);
 
 
-router.post('/login', [
+router.post('/login', 
   body('username').isString().notEmpty().withMessage('Username is required'),
   body('password').isString().notEmpty().withMessage('Password is required')
-], handleValidationErrors, login);
+, validationError, login);
 
 module.exports = router;

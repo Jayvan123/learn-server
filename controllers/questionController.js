@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Question = require("../models/questionModel");
 const Lesson = require("../models/lessonModel");
@@ -9,7 +10,6 @@ const generateQuestions = async (req, res) => {
   try {
     const { lessonId } = req.params;
    
-   
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
@@ -19,8 +19,8 @@ const generateQuestions = async (req, res) => {
       temperature: 0.2,
       topP: 0.95,
       topK: 40,
-      maxOutputTokens: 8192,
-      responseMimeType: "application/json",
+      max_output_tokens: 8192,
+      response_mime_type: "application/json",
     };
 
     const prompt = `
@@ -31,9 +31,10 @@ const generateQuestions = async (req, res) => {
     Each question must have exactly 4 answer choices.
     Indicate the correct answer.
 
-    **VERY IMPORTANT:** Return ONLY valid JSON without any explanations, extra text, or formatting like markdown, backticks, or code blocks.
+    **VERY IMPORTANT:** Return ONLY valid text in a JSON format without any explanations, extra text, or formatting like markdown, backticks, or code blocks.
 
-    **Format it EXACTLY like this:**
+    Format it EXACTLY like this:
+    
     {
       "questions": [
         {
@@ -44,23 +45,28 @@ const generateQuestions = async (req, res) => {
       ]
     }
 
-    Do NOT include explanations or any other text, ONLY return valid JSON.
     `;
 
-
+    const cleanResponse = (responseText) => {
+      // Remove the unwanted 'ny' and markdown formatting (backticks)
+      const cleanedText = responseText.replace(/^[a-zA-Z]+\n*|```json|\n```/g, '').trim();
+      return cleanedText;
+    };
+    
     const result = await model.generateContent({
       contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig,
     });
-
+    
     const responseText = await result.response.text();
-    console.log(responseText);
-
- 
-    const parsedData = JSON.parse(responseText);
+    const cleanedResponse = cleanResponse(responseText);
+    console.log("Cleaned Response:", cleanedResponse);
+    
+    // Now parse the cleaned response as JSON
+    const parsedData = JSON.parse(cleanedResponse);
     const generatedQuestions = parsedData.questions;
+    
 
-  
     const savedQuestions = await Question.insertMany(
       generatedQuestions.map(q => ({
         lessonId,
@@ -76,6 +82,7 @@ const generateQuestions = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get Questions by Lesson ID
 const getQuestionsByLesson = async (req, res) => {
