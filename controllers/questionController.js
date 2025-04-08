@@ -1,9 +1,7 @@
 require("dotenv").config();
-const { GoogleGenerativeAI } = require("@google/generative-ai");
 const Question = require("../models/questionModel");
 const Lesson = require("../models/lessonModel");
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const {model, generationConfig} = require("../lib/geminiAI");
 
 // Generate Questions
 const generateQuestions = async (req, res) => {
@@ -13,15 +11,6 @@ const generateQuestions = async (req, res) => {
     const lesson = await Lesson.findById(lessonId);
     if (!lesson) return res.status(404).json({ error: "Lesson not found" });
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-pro-exp-02-05" });
-
-    const generationConfig = {
-      temperature: 0.2,
-      topP: 0.95,
-      topK: 40,
-      max_output_tokens: 8192,
-      response_mime_type: "application/json",
-    };
 
     const prompt = `
     I have the following lesson notes:
