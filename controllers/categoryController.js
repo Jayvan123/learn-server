@@ -4,16 +4,14 @@ const Category = require("../models/categoryModel");
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
-    const userId = req.user?.id;
+    const userId = req.user.id;
 
-    const trimmedName = name.trim();
-    const existingCategory = await Category.findOne({ name: trimmedName, userId });
-
+    const existingCategory = await Category.findOne({ name, userId });
     if (existingCategory) {
       return res.status(400).json({ error: "Category already exists." });
     }
 
-    const newCategory = await Category.create({ name: trimmedName, userId });
+    const newCategory = await Category.create({ name, userId });
     res.status(201).json(newCategory);
   } catch (error) {
     console.error("Error creating category:", error);
@@ -24,7 +22,7 @@ const createCategory = async (req, res) => {
 // Get All Categories 
 const getCategories = async (req, res) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user.id;
     const categories = await Category.find({ userId });
     res.status(200).json(categories);
   } catch (error) {
@@ -38,18 +36,16 @@ const updateCategory = async (req, res) => {
   try {
     const { name } = req.body;
     const { id } = req.params;
-    const userId = req.user?.id;
+    const userId = req.user.id;
 
-    const trimmedName = name.trim();
-    const existingCategory = await Category.findOne({ name: trimmedName, userId });
-
+    const existingCategory = await Category.findOne({ name, userId });
     if (existingCategory) {
       return res.status(400).json({ error: "Category with this name already exists." });
     }
 
     const updatedCategory = await Category.findOneAndUpdate(
       { _id: id, userId },
-      { name: trimmedName },
+      { name },
       { new: true }
     );
 
@@ -68,7 +64,7 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
   try {
     const { id } = req.params;
-    const userId = req.user?.id;
+    const userId = req.user.id;
 
     const deletedCategory = await Category.findOneAndDelete({ _id: id, userId });
 
@@ -83,4 +79,9 @@ const deleteCategory = async (req, res) => {
   }
 };
 
-module.exports = { createCategory, getCategories, updateCategory, deleteCategory };
+module.exports = {
+  createCategory,
+  getCategories,
+  updateCategory,
+  deleteCategory,
+};
