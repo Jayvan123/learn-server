@@ -11,6 +11,7 @@ const lessonRoutes = require("./routes/lessonRoutes");
 const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
+const attemptRoutes = require("./routes/attemptRoutes");
 dotenv.config();
 const swaggerDocument = YAML.load("./swagger.yaml");
 
@@ -36,7 +37,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/attempts", attemptRoutes);
 app.use("/api/users", userRoutes);
+
+// Database connection
 dbConnection().then(() => {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

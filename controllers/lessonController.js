@@ -88,4 +88,39 @@ const deleteLesson = async (req, res) => {
   }
 };
 
-module.exports = { createLesson, getLessons, getLessonById, updateLesson, deleteLesson };
+const getLatestLessons = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const latestLessons = await Lesson.find({ userId })
+      .sort({ createdAt: -1 }) // latest first
+      .limit(5)
+      .populate("categoryId", "name"); // optional: populate category name
+
+    res.status(200).json({ lessons: latestLessons });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch latest lessons", error });
+  }
+};
+
+const countUserLessons = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const lessonCount = await Lesson.countDocuments({ userId });
+
+    res.status(200).json({ total: lessonCount });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to count user's lessons", error });
+  }
+};
+
+module.exports = { 
+  createLesson, 
+  getLessons, 
+  getLessonById, 
+  updateLesson, 
+  deleteLesson, 
+  getLatestLessons,
+  countUserLessons
+};
