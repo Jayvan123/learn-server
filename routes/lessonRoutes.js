@@ -1,5 +1,5 @@
 const express = require("express");
-const { body, param, validationResult } = require("express-validator");
+const { body, param } = require("express-validator");
 const router = express.Router();
 const validationError = require('../utils/validationError');
 const authMiddleware = require("../middleware/authMiddleware");
@@ -9,6 +9,8 @@ const {
   getLessonById,
   updateLesson,
   deleteLesson,
+  getLatestLessons,
+  countUserLessons
 } = require("../controllers/lessonController");
 
 
@@ -33,13 +35,12 @@ router.post(
   createLesson
 );
 
-
+// Get Lessons
 router.get(
   "/",
   authMiddleware,
   getLessons
 );
-
 
 router.get(
   "/:id",
@@ -78,6 +79,27 @@ router.delete(
     .isMongoId().withMessage("Invalid lesson ID."),
     validationError,
   deleteLesson
+);
+
+// Get Latest Lessons
+router.get(
+  "/latest/:userId",
+  authMiddleware,
+  param("userId")
+  .notEmpty().withMessage("User ID is required")
+  .isMongoId().withMessage("Invalid User ID"),
+  validationError,
+  getLatestLessons
+);
+
+// Count Lessons for a User
+router.get(
+  "/count/:userId",
+  authMiddleware,
+  param("userId").notEmpty().withMessage("User ID is required")
+    .isMongoId().withMessage("Invalid User ID"),
+  validationError,
+  countUserLessons
 );
 
 module.exports = router;

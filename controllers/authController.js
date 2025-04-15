@@ -28,10 +28,10 @@ const login = async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    const { _id, firstName, lastName, email } = user;
+    const { _id, firstName, lastName, email, profilePic } = user;
     res.json({ 
       token, 
-      user: { id: _id, firstName, lastName, username, email } 
+      user: { id: _id, firstName, lastName, username, email, profilePic } 
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
