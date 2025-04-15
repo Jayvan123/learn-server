@@ -54,7 +54,7 @@ const getLessonById = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
+ 
 const updateLesson = async (req, res) => {
   try {
     const { title, content } = req.body;
