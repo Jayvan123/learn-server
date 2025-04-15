@@ -6,6 +6,8 @@ const {
   saveLessonAttempt,
   getLessonAttempts,
   getUserTotalAttempts,
+  getAverageScoreByLesson,
+  getAverageScoreByUser
 } = require("../controllers/attemptController");
 
 const router = express.Router();
@@ -49,6 +51,25 @@ router.get("/user/:userId",
         .isMongoId().withMessage("Invalid User ID"),
     validationError,
     getUserTotalAttempts
+);
+
+// Average score by lesson
+router.get(
+    "/average/lesson/:lessonId",
+    authMiddleware,
+    param("lessonId")
+        .notEmpty().isMongoId().withMessage("Invalid lesson ID"),
+    validationError,
+    getAverageScoreByLesson
+);
+  
+  // Average score by user
+router.get(
+    "/average/user/:userId",
+    authMiddleware,
+    param("userId").notEmpty().isMongoId().withMessage("Invalid user ID"),
+    validationError,
+    getAverageScoreByUser
 );
 
 module.exports = router;
