@@ -35,10 +35,6 @@ router.post(
   createLesson
 );
 
-router.post("/lessons/pdf", 
-  authMiddleware, 
-  upload.single("pdf"), 
-  createPdfLesson);
 
 // Get Lessons
 router.get(

@@ -12,7 +12,6 @@ const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
 const attemptRoutes = require("./routes/attemptRoutes");
-const pdfRoutes = require("./routes/pdfRoutes");
 
 dotenv.config();
 const swaggerDocument = YAML.load("./swagger.yaml");
@@ -41,7 +40,6 @@ app.use("/api/questions", questionRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/attempts", attemptRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/pdf", pdfRoutes)
 
 // Database connection
 dbConnection().then(() => {
