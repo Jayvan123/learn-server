@@ -1,5 +1,6 @@
 const Lesson = require("../models/lessonModel");
 const Category =require("../models/categoryModel")
+const cloudinary = require("../lib/cloudinary");
 
 // Create a new lesson
 const createLesson = async (req, res) => {
@@ -28,6 +29,43 @@ const createLesson = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+const createPdfLesson = async (req, res) => {
+  try {
+    const { title, categoryName } = req.body;
+    const userId = req.user?.id;
+
+    if (!title || !req.file) {
+      return res.status(400).json({ error: "Title and PDF file are required." });
+    }
+
+    const categoryToFind = categoryName?.trim() || "default";
+    let category = await Category.findOne({ name: categoryToFind, userId });
+
+    if (!category) {
+      category = await Category.create({ name: categoryToFind, userId });
+    }
+
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      resource_type: "raw", // raw is for non-image files like PDFs
+      folder: "lessons/pdfs",
+    });
+
+    const newLesson = await Lesson.create({
+      userId,
+      title,
+      pdfUrl: result.secure_url,
+      isPdf: true,
+      categoryId: category._id,
+    });
+
+    res.status(201).json(newLesson);
+  } catch (error) {
+    console.error("Error creating PDF lesson:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 
 // Get all lessons for the logged-in user
@@ -117,6 +155,7 @@ const countUserLessons = async (req, res) => {
 
 module.exports = { 
   createLesson, 
+  createPdfLesson,
   getLessons, 
   getLessonById, 
   updateLesson, 
