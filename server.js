@@ -12,6 +12,7 @@ const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
 const attemptRoutes = require("./routes/attemptRoutes");
+
 dotenv.config();
 const swaggerDocument = YAML.load("./swagger.yaml");
 
