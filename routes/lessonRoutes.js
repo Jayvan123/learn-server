@@ -6,6 +6,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
   createLesson,
   getLessons,
+  getLessonsByCategoryId,
   getLessonById,
   updateLesson,
   deleteLesson,
@@ -36,13 +37,24 @@ router.post(
 );
 
 
-// Get Lessons
+// Get all Lessons for specific user
 router.get(
   "/",
   authMiddleware,
   getLessons
 );
 
+// Get Lesson by Category ID
+router.get(
+  "/category/:categoryId",
+  authMiddleware,
+  param("categoryId")
+    .isMongoId().withMessage("Invalid Category ID."),
+  validationError,
+  getLessonsByCategoryId
+);
+
+// Get Lesson by ID
 router.get(
   "/:id",
   authMiddleware,
