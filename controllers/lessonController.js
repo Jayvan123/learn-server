@@ -80,6 +80,23 @@ const getLessons = async (req, res) => {
   }
 };
 
+
+// Fetch all lessons by categoryId 
+const getLessonsByCategoryId = async (req, res) => {
+  const { categoryId } = req.params;
+
+  try {
+    const lessons = await Lesson.find({ categoryId });
+    res.status(200).json({ success: true, data: lessons });
+  } catch (error) {
+    console.error('Error fetching lessons by categoryId:', error);
+    res.status(500).json({ success: false, message: 'Server Error' });
+  }
+};
+
+
+
+
 // Get a single lesson by ID
 const getLessonById = async (req, res) => {
   try {
@@ -157,6 +174,7 @@ module.exports = {
   createLesson, 
   createPdfLesson,
   getLessons, 
+  getLessonsByCategoryId,
   getLessonById, 
   updateLesson, 
   deleteLesson, 
