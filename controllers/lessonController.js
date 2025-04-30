@@ -47,7 +47,7 @@ const createPdfLesson = async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "raw", // raw is for non-image files like PDFs
+      resource_type: "raw", 
       folder: "lessons/pdfs",
     });
 

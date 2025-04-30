@@ -25,9 +25,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", 
-             "https://thinkbox.vercel.app", 
-             "https://learn-server-sroc.onrender.com"],
+    origin: [process.env.LOCAL_URL, 
+             process.env.FRONTEND_URL],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
