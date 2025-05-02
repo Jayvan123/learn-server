@@ -105,7 +105,17 @@ router.post(
   '/:userId/profile-pic',
   authMiddleware,
   param('userId').isMongoId().withMessage('Invalid user ID'),
-  upload.single('image'),
+  upload.single('image'), // Make sure your upload middleware is configured
+  (req, res, next) => {
+    // Additional file validation middleware
+    if (!req.file) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No image file provided' 
+      });
+    }
+    next();
+  },
   validationError,
   uploadProfilePic
 );
