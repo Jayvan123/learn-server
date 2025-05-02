@@ -47,7 +47,7 @@ const createPdfLesson = async (req, res) => {
     }
 
     const result = await cloudinary.uploader.upload(req.file.path, {
-      resource_type: "raw", // raw is for non-image files like PDFs
+      resource_type: "raw", 
       folder: "lessons/pdfs",
     });
 
@@ -162,13 +162,16 @@ const countUserLessons = async (req, res) => {
   try {
     const userId = req.params.userId;
 
+    // Get the count of lessons for the user
     const lessonCount = await Lesson.countDocuments({ userId });
 
-    res.status(200).json({ total: lessonCount });
+    // If no lessons found, return 0
+    res.status(200).json({ total: lessonCount || 0 });
   } catch (error) {
     res.status(500).json({ message: "Failed to count user's lessons", error });
   }
 };
+
 
 module.exports = { 
   createLesson, 

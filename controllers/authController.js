@@ -22,8 +22,13 @@ const login = async (req, res) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+    if (!user) {
+      return res.status(400).json({ error: 'Username does not exist' });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ error: 'Incorrect password' });
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
@@ -37,5 +42,6 @@ const login = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 module.exports = { register, login };
