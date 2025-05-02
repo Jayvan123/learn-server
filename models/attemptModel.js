@@ -13,7 +13,7 @@ const attemptSchema = new mongoose.Schema(
       required: true,
     },
     score: {
-      type: Number, // can be percentage or raw score
+      type: Number, 
       required: true,
     },
     totalItems: {
