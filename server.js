@@ -19,21 +19,20 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-console.log(process.env.CLOUDINARY_API_KEY);
-
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000", 
-             "https://thinkbox.vercel.app", 
-             "https://learn-server-sroc.onrender.com"],
+    origin: [process.env.LOCAL_URL, 
+             process.env.FRONTEND_URL,
+             process.env.BACKEND_URL
+            ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
 );
 
 // Routes
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", authRoutes);
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/questions", questionRoutes);

@@ -37,7 +37,6 @@ const generateQuestions = async (req, res) => {
     `;
 
     const cleanResponse = (responseText) => {
-      // Remove the unwanted 'ny' and markdown formatting (backticks)
       const cleanedText = responseText.replace(/^[a-zA-Z]+\n*|```json|\n```/g, '').trim();
       return cleanedText;
     };
@@ -94,4 +93,7 @@ const getQuestionsByLesson = async (req, res) => {
   }
 };
 
-module.exports = { generateQuestions, getQuestionsByLesson };
+module.exports = { 
+  generateQuestions, 
+  getQuestionsByLesson 
+};
