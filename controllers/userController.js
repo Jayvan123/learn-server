@@ -104,11 +104,24 @@ const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
-    res.status(200).json({ success: true, data: user });
+
+    // Return only the user data in the desired format
+    res.status(200).json({
+      success: true,
+      user: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        email: user.email,
+        profilePic: user.profilePic,
+      }
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 
 const updateUser = async (req, res) => {
