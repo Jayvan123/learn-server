@@ -46,7 +46,7 @@ const getUserTotalAttempts = async (req, res) => {
 
     const attempts = await LessonResult.countDocuments({ userId });
 
-    // Return 0 if no attempts found
+ 
     res.status(200).json({ userId, totalAttempts: attempts || 0 });
   } catch (error) {
     res.status(500).json({ message: "Failed to count user attempts", error });
@@ -69,7 +69,7 @@ const getAverageScoreByLesson = async (req, res) => {
       },
     ]);
 
-    // Return default values if no attempts found
+ 
     if (result.length === 0) {
       return res.status(200).json({
         lessonId,
@@ -104,7 +104,6 @@ const getAverageScoreByUser = async (req, res) => {
       },
     ]);
 
-    // Return default values if no attempts found
     if (result.length === 0) {
       return res.status(200).json({
         userId,

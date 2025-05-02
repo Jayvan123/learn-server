@@ -5,15 +5,6 @@ const bcrypt = require('bcryptjs');
 
 const uploadProfilePic = async (req, res) => {
   try {
-    // Authorization check
-    if (req.params.userId !== req.user.id) {
-      return res.status(403).json({ 
-        success: false, 
-        message: 'Unauthorized to update this profile' 
-      });
-    }
-
-    // File validation
     if (!req.file) {
       return res.status(400).json({ 
         success: false, 
@@ -21,7 +12,6 @@ const uploadProfilePic = async (req, res) => {
       });
     }
 
-    // File type validation
     const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
     if (!allowedTypes.includes(req.file.mimetype)) {
       return res.status(400).json({ 
@@ -30,7 +20,6 @@ const uploadProfilePic = async (req, res) => {
       });
     }
 
-    // File size validation (e.g., 5MB max)
     if (req.file.size > 5 * 1024 * 1024) {
       return res.status(400).json({ 
         success: false, 
@@ -56,17 +45,14 @@ const uploadProfilePic = async (req, res) => {
 
     const result = await streamUpload(req.file.buffer);
 
-    // Get user first to check for existing image
     const user = await User.findById(req.params.userId);
     
-    // Update user with new image
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       { profilePic: result.secure_url },
       { new: true }
     );
 
-    // Optionally delete old image from Cloudinary
     if (user.profilePic) {
       const publicId = user.profilePic.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(`profile_pics/${publicId}`);
@@ -105,7 +91,7 @@ const getUserById = async (req, res) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
-    // Return only the user data in the desired format
+  
     res.status(200).json({
       success: true,
       user: {
@@ -138,28 +124,23 @@ const changePassword = async (req, res) => {
     const { userId } = req.params;
     const { currentPassword, newPassword } = req.body;
 
-    // Validate input
     if (!currentPassword || !newPassword) {
       return res.status(400).json({ message: 'Both current and new password are required' });
     }
 
-    // Find user by ID
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Verify current password
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Current password is incorrect' });
     }
 
-    // Hash new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    // Update password
     user.password = hashedPassword;
     await user.save();
 
