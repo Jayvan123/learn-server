@@ -2,6 +2,7 @@ const express = require('express');
 const { body, param, validationResult } = require('express-validator');
 const router = express.Router();
 const multer = require('multer');
+const User = require("../models/userModel");
 const {
         getAllUsers,
         getUserById,
