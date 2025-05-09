@@ -1,6 +1,6 @@
 const Category = require("../models/categoryModel");
-
-// Create a Category
+const { getIO } = require("../lib/socket");
+// Controller: Creating a category in the DB
 const createCategory = async (req, res) => {
   try {
     const { name } = req.body;
@@ -12,12 +12,25 @@ const createCategory = async (req, res) => {
     }
 
     const newCategory = await Category.create({ name, userId });
-    res.status(201).json(newCategory);
+    // Match data emitted in the socket event by emitting only necessary properties
+    const categoryData = {
+      id: newCategory._id.toString(),  // Ensure it's a string if needed
+      name: newCategory.name,
+    };
+
+    // Send response to the client
+    res.status(201).json(categoryData);
+    
+    // Emit to clients (socket.js part) -- example of the socket interaction 
+    // Note: This would be part of the socket server, not in the controller directly
+    getIO().emit("new_category", categoryData);  // Emit to all connected clients
+
   } catch (error) {
     console.error("Error creating category:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 // Get All Categories 
 const getCategories = async (req, res) => {
