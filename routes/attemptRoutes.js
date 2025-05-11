@@ -4,6 +4,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 const validationError = require("../utils/validationError");
 const {
   saveLessonAttempt,
+  getAttemptsByUser,
   getLessonAttempts,
   getUserTotalAttempts,
   getAverageScoreByLesson,
@@ -15,7 +16,6 @@ const router = express.Router();
 // Save Lesson Attempt
 router.post(
   "/",
-  authMiddleware,
     body("userId")
         .notEmpty().withMessage("User ID is required")
         .isMongoId().withMessage("Invalid User ID"),
@@ -34,6 +34,8 @@ router.post(
   validationError,
   saveLessonAttempt
 );
+
+router.get("/allattempts/:userId", getAttemptsByUser);
 
 // Get Attempt for a specific Lesson
 router.get("/lesson/:lessonId", 
