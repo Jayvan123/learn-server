@@ -1,5 +1,6 @@
 const Lesson = require("../models/lessonModel");
-const Category =require("../models/categoryModel")
+const Category = require("../models/categoryModel");
+const { getIO } = require("../lib/socket");
 const cloudinary = require("../lib/cloudinary");
 
 // Create a new lesson
@@ -12,8 +13,11 @@ const createLesson = async (req, res) => {
 
     let category = await Category.findOne({ name: categoryToFind, userId });
 
+    let isNewCategory = false;
+
     if (!category) {
       category = await Category.create({ name: categoryToFind, userId });
+      isNewCategory = true;
     }
 
     const newLesson = await Lesson.create({
@@ -23,12 +27,22 @@ const createLesson = async (req, res) => {
       categoryId: category._id,
     });
 
+    // Emit "new_category" only if it's a newly created one
+    if (isNewCategory) {
+      const io = getIO();
+      io.emit("new_category", {
+        id: category._id.toString(),
+        name: category.name,
+      });
+    }
+
     res.status(201).json(newLesson);
   } catch (error) {
     console.error("Error creating lesson:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const createPdfLesson = async (req, res) => {
   try {
