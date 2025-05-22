@@ -12,20 +12,20 @@ const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
 const attemptRoutes = require("./routes/attemptRoutes");
-const { initSocket } = require("./lib/socket"); // <-- Import socket
+const { initSocket } = require("./lib/socket"); 
 
 dotenv.config();
 const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app = express();
-const server = http.createServer(app); // <-- Use http server for socket.io
+const server = http.createServer(app); 
 
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(
   cors({
-    origin: "http://localhost:3000", 
+    origin: ["http://localhost:3000","https://learn-web-aigs.onrender.com", "https://thinkbox.vercel.app/"], 
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -46,5 +46,5 @@ dbConnection().then(() => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
 
-  initSocket(server); // <-- Initialize socket here
+  initSocket(server); 
 });
