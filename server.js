@@ -25,7 +25,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["http://localhost:3000","https://learn-web-aigs.onrender.com", "https://thinkbox.vercel.app/"], 
+    origin: ["http://localhost:3000","https://learn-server-fmbt.onrender.com", "https://learn-web-aigs.onrender.com", "https://thinkbox.vercel.app"], 
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
