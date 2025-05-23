@@ -27,7 +27,6 @@ const createLesson = async (req, res) => {
       categoryId: category._id,
     });
 
-    // Emit "new_category" only if it's a newly created one
     if (isNewCategory) {
       const io = getIO();
       io.emit("new_category", {
@@ -82,7 +81,6 @@ const createPdfLesson = async (req, res) => {
 
 
 
-// Get all lessons for the logged-in user
 const getLessons = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -95,7 +93,6 @@ const getLessons = async (req, res) => {
 };
 
 
-// Fetch all lessons by categoryId 
 const getLessonsByCategoryId = async (req, res) => {
   const { categoryId } = req.params;
 
@@ -110,8 +107,6 @@ const getLessonsByCategoryId = async (req, res) => {
 
 
 
-
-// Get a single lesson by ID
 const getLessonById = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
@@ -143,7 +138,6 @@ const updateLesson = async (req, res) => {
   }
 };
 
-// Delete a lesson
 const deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
@@ -162,9 +156,9 @@ const getLatestLessons = async (req, res) => {
     const userId = req.params.userId;
 
     const latestLessons = await Lesson.find({ userId })
-      .sort({ createdAt: -1 }) // latest first
+      .sort({ createdAt: -1 }) 
       .limit(5)
-      .populate("categoryId", "name"); // optional: populate category name
+      .populate("categoryId", "name"); 
 
     res.status(200).json({ lessons: latestLessons });
   } catch (error) {
