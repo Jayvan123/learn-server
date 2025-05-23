@@ -25,6 +25,21 @@ const saveLessonAttempt = async (req, res) => {
     }
   };
 
+// Get all attempts for a specific user
+const getAttemptsByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const attempts = await LessonResult.find({ userId })
+      .populate("lessonId", "title") // You can add more lesson fields if needed
+      .sort({ takenAt: -1 });
+
+    res.status(200).json({ attempts });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch attempts", error });
+  }
+};
+
 // Get attempts for a specific lesson
 const getLessonAttempts = async (req, res) => {
   try {
@@ -125,6 +140,7 @@ const getAverageScoreByUser = async (req, res) => {
   
 module.exports = {
     saveLessonAttempt,
+    getAttemptsByUser,
     getLessonAttempts,
     getUserTotalAttempts,
     getAverageScoreByLesson,

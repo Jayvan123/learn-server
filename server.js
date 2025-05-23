@@ -1,5 +1,5 @@
-
 const express = require("express");
+const http = require("http"); // <-- Add this
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
@@ -12,20 +12,20 @@ const questionRoutes = require("./routes/questionRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
 const userRoutes = require("./routes/userRoutes");
 const attemptRoutes = require("./routes/attemptRoutes");
+const { initSocket } = require("./lib/socket"); 
 
 dotenv.config();
 const swaggerDocument = YAML.load("./swagger.yaml");
 
 const app = express();
+const server = http.createServer(app); 
+
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(
   cors({
-    origin: [process.env.LOCAL_URL, 
-             process.env.FRONTEND_URL,
-             process.env.BACKEND_URL
-            ],
+    origin: ["http://localhost:3000","https://learn-server-fmbt.onrender.com", "https://learn-web-aigs.onrender.com", "https://thinkbox.vercel.app"], 
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -40,10 +40,11 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/attempts", attemptRoutes);
 app.use("/api/users", userRoutes);
 
-// Database connection
+// DB then start server + init socket
 dbConnection().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
+
+  initSocket(server); 
 });
- 

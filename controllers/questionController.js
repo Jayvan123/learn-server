@@ -93,7 +93,36 @@ const getQuestionsByLesson = async (req, res) => {
   }
 };
 
+// Batch update multiple questions
+const batchUpdateQuestions = async (req, res) => {
+  try {
+    const { updates } = req.body; // Expecting an array of { _id, questionText, choices, correctAnswer }
+
+    if (!Array.isArray(updates) || updates.length === 0) {
+      return res.status(400).json({ message: "No updates provided" });
+    }
+
+    const operations = updates.map((q) => ({
+      updateOne: {
+        filter: { _id: q._id },
+        update: {
+          questionText: q.questionText,
+          choices: q.choices,
+          correctAnswer: q.correctAnswer,
+        },
+      },
+    }));
+
+    const result = await Question.bulkWrite(operations);
+    res.status(200).json({ message: "Questions updated", result });
+  } catch (error) {
+    res.status(500).json({ message: "Batch update failed", error });
+  }
+};
+
+
 module.exports = { 
   generateQuestions, 
-  getQuestionsByLesson 
+  getQuestionsByLesson, 
+  batchUpdateQuestions
 };

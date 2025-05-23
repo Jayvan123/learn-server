@@ -1,5 +1,6 @@
 const Lesson = require("../models/lessonModel");
-const Category =require("../models/categoryModel")
+const Category = require("../models/categoryModel");
+const { getIO } = require("../lib/socket");
 const cloudinary = require("../lib/cloudinary");
 
 // Create a new lesson
@@ -12,8 +13,11 @@ const createLesson = async (req, res) => {
 
     let category = await Category.findOne({ name: categoryToFind, userId });
 
+    let isNewCategory = false;
+
     if (!category) {
       category = await Category.create({ name: categoryToFind, userId });
+      isNewCategory = true;
     }
 
     const newLesson = await Lesson.create({
@@ -23,12 +27,21 @@ const createLesson = async (req, res) => {
       categoryId: category._id,
     });
 
+    if (isNewCategory) {
+      const io = getIO();
+      io.emit("new_category", {
+        id: category._id.toString(),
+        name: category.name,
+      });
+    }
+
     res.status(201).json(newLesson);
   } catch (error) {
     console.error("Error creating lesson:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 
 const createPdfLesson = async (req, res) => {
   try {
@@ -68,7 +81,6 @@ const createPdfLesson = async (req, res) => {
 
 
 
-// Get all lessons for the logged-in user
 const getLessons = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -81,7 +93,6 @@ const getLessons = async (req, res) => {
 };
 
 
-// Fetch all lessons by categoryId 
 const getLessonsByCategoryId = async (req, res) => {
   const { categoryId } = req.params;
 
@@ -96,8 +107,6 @@ const getLessonsByCategoryId = async (req, res) => {
 
 
 
-
-// Get a single lesson by ID
 const getLessonById = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
@@ -129,7 +138,6 @@ const updateLesson = async (req, res) => {
   }
 };
 
-// Delete a lesson
 const deleteLesson = async (req, res) => {
   try {
     const lesson = await Lesson.findById(req.params.id);
@@ -148,9 +156,9 @@ const getLatestLessons = async (req, res) => {
     const userId = req.params.userId;
 
     const latestLessons = await Lesson.find({ userId })
-      .sort({ createdAt: -1 }) // latest first
+      .sort({ createdAt: -1 }) 
       .limit(5)
-      .populate("categoryId", "name"); // optional: populate category name
+      .populate("categoryId", "name"); 
 
     res.status(200).json({ lessons: latestLessons });
   } catch (error) {

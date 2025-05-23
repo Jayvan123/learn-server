@@ -7,7 +7,7 @@ info:
 servers:
   - url: http://localhost:5000
     description: Development Server
-  - url: https://learn-server-sroc.onrender.com
+  - url: https://learn-server-fmbt.onrender.com
     description: Production Server
 
 components:
